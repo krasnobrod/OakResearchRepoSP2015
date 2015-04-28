@@ -41,7 +41,7 @@ INPUT
  Notes
  day
  budburst
- days_to_leaf
+ full_leaf
 ;
 LABEL  ID_notes = "ID.notes" ;
 LABEL  Use_this_tree = "Use.this.tree" ;
@@ -56,5 +56,5 @@ LABEL  Week_7 = "Week.7" ;
 LABEL  week_8 = "week.8" ;
 LABEL  week_9 = "week.9" ;
 LABEL  week_10 = "week.10" ;
-LABEL  days_to_leaf = "days.to.leaf" ;
+LABEL  full_leaf = "full.leaf" ;
 RUN;
