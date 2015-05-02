@@ -1,6 +1,8 @@
 # Getting started
 # Started: April 24, 2015. Begin to assemble data, and improve legibility 
 library(foreign)
+library(lattice)
+
 
 setwd("/Users/SamKrasnobrod/GitHub/OakResearchRepoSP2015") # Samuel
 setwd("C:/GitHub/OakResearchRepoSP2015") # Robin
@@ -34,4 +36,12 @@ datav2$full.leaf <- fl
 write.foreign(datav2, "ChicoPhen.txt", "ReadChicoPhen.sas", package="SAS")
 
 
+## Use bb or fl against site in anova
+hist(bb) #shows bb for weeks 1-8
+shist(fl)
+summary(aov(bb~datav2$site)) #anova bb against site
+summary(aov(fl~datav2$site))
+aov(bb~datav2$site)
+view(datav2$site)
 
+## Setup histogram with lattice for anova results
