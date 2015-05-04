@@ -15,6 +15,7 @@ datav2 <- read.csv("ChicoPhenv2.csv", header=TRUE, stringsAsFactors=FALSE)
 
 weeks <- which(grepl("^week", names(datav2), ignore.case=TRUE))
 
+
 # Add a count of days from planting until bud burst (First recorded 1)
 bb <- rep(NA, NROW(datav2))
 for(i in 1:NROW(datav2)){
@@ -32,17 +33,52 @@ for(i in 1:NROW(datav2)){
 }
 datav2$full.leaf <- fl
 
+# Do some data cleaning to site name
+# - If the site name starts with TAC, then replace it with "TAC" only, otherwise keep original value
+datav2$site <- ifelse(grepl("^TAC", datav2$site, ignore.case=TRUE), "TAC", datav2$site)
+
+# Only keep records with valid site names. 
+site.factor <- as.factor(datav2$site) # converted site to a temp factor variable
+bad.levels <- levels(site.factor)[1:13] # listed invalid site names
+`%ni%` <- Negate(`%in%`) #Define a new function that is "not in"
+datav3 <- subset(datav2, datav2$site %ni% bad.levels) #subset the data to only keep records without bad names
+
+
+# merge on lat & long data by tree
+
+
+# aggregate to average lat/long/elevation by site
+
+
+
+
+# clean up
+rm(bb, fl, site.factor, weeks, i, bad.levels, datav2, x);gc()
 
 # Write the data as a text file - and produce SAS code to read in data. 
-write.foreign(datav2, "ChicoPhen.txt", "ReadChicoPhen.sas", package="SAS")
+write.foreign(datav3, "ChicoPhen.txt", "ReadChicoPhen.sas", package="SAS")
 
-
+#################################################################################################
 ## Use bb or fl against site in anova
-hist(bb) #shows bb for weeks 1-8
-shist(fl)
-summary(aov(bb~datav2$site)) #anova bb against site
-summary(aov(fl~datav2$site))
-aov(bb~datav2$site)
-view(datav2$site)
+library(lattice)
+histogram(datav3$budburst) #shows bb for weeks 1-8
+histogram(~full.leaf | site, data=datav3)
+
+mean.bb <- tapply(datav3$budburst, datav3$site, mean, na.rm=TRUE)
+dotplot(mean.bb)
+
+mean.fl <- tapply(datav3$full.leaf, datav3$site, mean, na.rm=TRUE)
+dotplot(mean.fl)
+
+# Add lines for mean, 95% CI, color those with means that aren't in CI red
+# make means stand out better
+# horizonal axis 2, count on axis 4, 
+boxplot(budburst~site, data=datav3, horizontal=TRUE, pch=".", col="gray80", 
+        main="Budburst by site", xlab="weeks")
+
+
+summary(aov(budburst~site, data=datav3)) #anova bb against site
+summary(aov(full.leaf~site, data=datav3))
+
 
 ## Setup histogram with lattice for anova results
