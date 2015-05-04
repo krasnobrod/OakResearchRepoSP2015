@@ -18,11 +18,12 @@ weeks <- which(grepl("^week", names(datav2), ignore.case=TRUE))
 # Add a count of days from planting until bud burst (First recorded 1)
 bb <- rep(NA, NROW(datav2))
 for(i in 1:NROW(datav2)){
-    x <- min(which(datav2[i,weeks]==1))
-    bb[i] <- ifelse(x<Inf, x, NA)
+  x <- min(which(datav2[i,weeks]>0
+           & !is.na(datav2[i,weeks])))
+  bb[i] <- ifelse(x<Inf, x, NA)
 }
 datav2$budburst <- bb
-  
+
 # Add a count of weeks from planting until full leafs (First recorded 5)
 fl <- rep(NA, NROW(datav2))
 for(i in 1:NROW(datav2)){
