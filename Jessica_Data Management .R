@@ -76,20 +76,21 @@ mean.total.fl <- mean(datav3$full.leaf, na.rm=TRUE)
 q1.bb <- tapply(datav3$budburst, datav3$site, function(x)quantile(x,.25, na.rm=TRUE))
 q3.bb <- tapply(datav3$budburst, datav3$site, function(x)quantile(x,.75, na.rm=TRUE))
 # COPY/PASTE CHANGE BB TO FL
-
+q1.fl <- tapply(datav3$full.leaf, datav3$site, function(x)quantile(x,.25, na.rm=TRUE))
+q3.fl <- tapply(datav3$full.leaf, datav3$site, function(x)quantile(x,.75, na.rm=TRUE))
 # create a vector of colors, where if the Q1 is above the mean or Q3 is below the mean color it red.
 color.bb <- ifelse(q1.bb>mean.total.bb | q3.bb<mean.total.bb, "red", "gray90")
 #copy/paste and change bb to fl
-color.fl
+color.fl <- ifelse(q1.fl>mean.total.fl | q3.bb<mean.total.fl, "red", "gray90")
 
 
 #### PLOT BUDBURST DISTRIBUTION BY SITE ###
 
-png(filename="budburst.png", width=480, height=1000) # get this height looking good before copy 
+png(filename="budburst.png", width=480, height=1200) # get this height looking good before copy 
 
 boxplot(budburst~site, data=datav3, horizontal=TRUE, axes=FALSE, pch=".", col=color.bb, 
         main="Week of first Bud burst by site", xlab="weeks")
-axis(2, las=2, at=1:length(mean.bb), label=names(mean.bb))
+axis(2, las=2, at=1:length(mean.bb), label=names(mean.bb), cex.lab=.75)
 axis(1, at=1:10)
 box()
 abline(v=mean.total.bb, col="slateblue", lwd=2)
@@ -98,6 +99,15 @@ points(mean.bb, 1:length(mean.bb), col="blue", pch=16)
 dev.off()
 
 # Copy/paste all above code and change to fl
+png(filename="budburst.png", width=480, height=1200) 
+
+boxplot(budburst~site, data=datav3, horizontal=TRUE, axes=FALSE, pch=".", col=color.bb, 
+        main="Week of first Bud burst by site", xlab="weeks")
+axis(2, las=2, at=1:length(mean.bb), label=names(mean.bb), cex.lab=.75)
+axis(1, at=1:10)
+box()
+abline(v=mean.total.bb, col="slateblue", lwd=2)
+points(mean.bb, 1:length(mean.bb), col="blue", pch=16)
 
 
 
