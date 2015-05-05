@@ -47,8 +47,7 @@ datav3 <- subset(datav2, datav2$site %ni% bad.levels) #subset the data to only k
 # merge on lat & long data by tree
 
 
-# aggregate to average lat/long/elevation by site
-
+# Sort by lat (instead of site)
 
 
 
@@ -64,17 +63,49 @@ library(lattice)
 histogram(datav3$budburst) #shows bb for weeks 1-8
 histogram(~full.leaf | site, data=datav3)
 
+# CALCULATE THE MEAN VALUE PER SITE
 mean.bb <- tapply(datav3$budburst, datav3$site, mean, na.rm=TRUE)
-dotplot(mean.bb)
-
 mean.fl <- tapply(datav3$full.leaf, datav3$site, mean, na.rm=TRUE)
-dotplot(mean.fl)
 
-# Add lines for mean, 95% CI, color those with means that aren't in CI red
-# make means stand out better
-# horizonal axis 2, count on axis 4, 
-boxplot(budburst~site, data=datav3, horizontal=TRUE, pch=".", col="gray80", 
-        main="Budburst by site", xlab="weeks")
+
+# OVERALL MEANS - TO BE PLOTTED AS THE VERTICAL LINE
+mean.total.bb <- mean(datav3$budburst, na.rm=TRUE)
+mean.total.fl <- mean(datav3$full.leaf, na.rm=TRUE)
+
+# Calculate the lower and upper quartiles for each variable by site
+q1.bb <- tapply(datav3$budburst, datav3$site, function(x)quantile(x,.25, na.rm=TRUE))
+q3.bb <- tapply(datav3$budburst, datav3$site, function(x)quantile(x,.75, na.rm=TRUE))
+# COPY/PASTE CHANGE BB TO FL
+
+# create a vector of colors, where if the Q1 is above the mean or Q3 is below the mean color it red.
+color.bb <- ifelse(q1.bb>mean.total.bb | q3.bb<mean.total.bb, "red", "gray90")
+#copy/paste and change bb to fl
+color.fl
+
+
+#### PLOT BUDBURST DISTRIBUTION BY SITE ###
+
+png(filename="budburst.png", width=480, height=1000) # get this height looking good before copy 
+
+boxplot(budburst~site, data=datav3, horizontal=TRUE, axes=FALSE, pch=".", col=color.bb, 
+        main="Week of first Bud burst by site", xlab="weeks")
+axis(2, las=2, at=1:length(mean.bb), label=names(mean.bb))
+axis(1, at=1:10)
+box()
+abline(v=mean.total.bb, col="slateblue", lwd=2)
+points(mean.bb, 1:length(mean.bb), col="blue", pch=16)
+
+dev.off()
+
+# Copy/paste all above code and change to fl
+
+
+
+
+
+
+
+
 
 
 summary(aov(budburst~site, data=datav3)) #anova bb against site
