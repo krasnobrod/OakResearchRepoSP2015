@@ -86,11 +86,11 @@ color.fl <- ifelse(q1.fl>mean.total.fl | q3.bb<mean.total.fl, "red", "gray90")
 
 #### PLOT BUDBURST DISTRIBUTION BY SITE ###
 
-png(filename="budburst.png", width=480, height=1200) # get this height looking good before copy 
+png(filename="budburst.png", width=480, height=1100) # get this height looking good before copy 
 
 boxplot(budburst~site, data=datav3, horizontal=TRUE, axes=FALSE, pch=".", col=color.bb, 
         main="Week of first Bud burst by site", xlab="weeks")
-axis(2, las=2, at=1:length(mean.bb), label=names(mean.bb), cex.lab=.75)
+axis(2, las=2, at=1:length(mean.bb), label=names(mean.bb), cex.axis=0.28)
 axis(1, at=1:10)
 box()
 abline(v=mean.total.bb, col="slateblue", lwd=2)
@@ -99,24 +99,18 @@ points(mean.bb, 1:length(mean.bb), col="blue", pch=16)
 dev.off()
 
 # Copy/paste all above code and change to fl
-png(filename="budburst.png", width=480, height=1200) 
+png(filename="full.leaf.png", width=480, height=1100) 
 
-boxplot(budburst~site, data=datav3, horizontal=TRUE, axes=FALSE, pch=".", col=color.bb, 
-        main="Week of first Bud burst by site", xlab="weeks")
-axis(2, las=2, at=1:length(mean.bb), label=names(mean.bb), cex.lab=.75)
+boxplot(full.leaf~site, data=datav3, horizontal=TRUE, axes=FALSE, pch=".", col=color.bb, 
+        main="Week of first Full Leaf by site", xlab="weeks")
+axis(2, las=2, at=1:length(mean.fl), label=names(mean.fl), cex.axis=.28)
 axis(1, at=1:10)
 box()
-abline(v=mean.total.bb, col="slateblue", lwd=2)
-points(mean.bb, 1:length(mean.bb), col="blue", pch=16)
+abline(v=mean.total.fl, col="slateblue", lwd=2)
+points(mean.fl, 1:length(mean.fl), col="blue", pch=16)
 
 
-
-
-
-
-
-
-
+######################################################################
 
 summary(aov(budburst~site, data=datav3)) #anova bb against site
 summary(aov(full.leaf~site, data=datav3))
